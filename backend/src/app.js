@@ -16,8 +16,9 @@ app.use(express.json()); // Con esto el servidor soportará formatos json y stri
 
 
 // routes
-app.get('/users', (req, res) => res.send('Users routes'));
-app.get('/notes', (req, res) => res.send('Notes routes'));
+    //app.get('/api/users', (req, res) => res.send('Users routes'));
+app.use('/api/users', require('./routes/users'))
+app.use('/api/notes', require('./routes/notes'))
 
 
 
