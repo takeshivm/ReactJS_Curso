@@ -12,12 +12,14 @@ function App() {
     <Router>
       <div className="App">
         <Navigation />
-        <Routes>
-          <Route path='/' exact element={<NotesList />} />
-          <Route path='/edit/:id' element={<CreateNote />} /> 
-          <Route path='/create' element={<CreateNote />} />
-          <Route path='/user' element={<CreateUser />} />
-        </Routes>
+        <div className="container p-4">
+          <Routes>
+            <Route path='/' exact element={<NotesList />} />
+            <Route path='/edit/:id' element={<CreateNote />} /> 
+            <Route path='/create' element={<CreateNote />} />
+            <Route path='/user' element={<CreateUser />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );
