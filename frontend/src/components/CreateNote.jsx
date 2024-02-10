@@ -1,24 +1,56 @@
 import axios from 'axios';
-import React, { Component } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { useParams } from 'react-router-dom';
+
 
 export default class CreateNote extends Component {
-
     state = {
         users: [],
         userSelected: '',
         title: '',
         content: '',
-        date: new Date()
+        date: new Date(),
+        editing: false,
+        _id: ''
     }
+    
     async componentDidMount() {
+            
         const res = await axios.get('http://localhost:4000/api/users');
-        this.setState({ users: res.data.map(user => user.username) });
+        this.setState({
+            users: res.data.map(user => user.username),
+            userSelected: res.data[0].username
+        });
+
+        
+        /*
+        if (this.props.match.params.id) {
+            this.setState({
+                editing: true,
+                _id: this.props.match.params.id
+            });
+        }*/
     }
 
-    onSubmit = (e) => {
+    onSubmit = async (e) => {
+        
         e.preventDefault();
+        const newNote = {
+            title: this.state.title,
+            content: this.state.content,
+            date: this.state.date,
+            author: this.state.userSelected
+        }
+
+        if (this.state.editing) {
+            await axios.put('http://localhost:4000/api/notes/' + this.setState._id, newNote);
+        } else {
+            await axios.post('http://localhost:4000/api/notes/', newNote);
+        }
+        
+        window.location.href= '/';
     }
 
     onInputChange = e => {
@@ -54,24 +86,24 @@ export default class CreateNote extends Component {
                     </select>
                 </div>
 
-                {/** UNPUT USER */}
+                {/** TITLE */}
                 <div className="form-group">
                     <input
                         type="text"
                         className='form-control'
                         placeholder='Title'
-                        name='Title'
+                        name='title'
                         required
                         onChange={this.onInputChange}
                     />
                 </div>
 
-                {/** UNPUT USER */}
+                {/** CONTENT */}
                 <div className="form-group">
                     <textarea
-                        name='Content'
+                        name='content'
                         className='form-control'
-                        placeholder='Content'
+                        placeholder='content'
                         required
                         onChange={this.onInputChange}
                     >
