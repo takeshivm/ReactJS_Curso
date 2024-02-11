@@ -3,7 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function CreateNote2() {
   const [content, setContent] = useState({
@@ -14,10 +14,10 @@ function CreateNote2() {
     users: [],
     _id: "",
   });
-  //const [editing, setEditing] = useState(false);
-  const [editing] = useState(false);
+  const [editing, setEditing] = useState(false);
+  //const [editing] = useState(false);
   const params = useParams();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,6 +41,7 @@ function CreateNote2() {
             _id: res.data._id,
             editing: true
           }));
+          setEditing(true);
         }
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -55,27 +56,26 @@ function CreateNote2() {
     e.preventDefault();
     if (editing) {
       const updatedNote = {
-        title: this.state.title,
-        content: this.state.content,
-        author: this.state.userSelected,
-        date: this.state.date,
+        title: content.title,
+        content: content.content,
+        author: content.userSelected,
+        date: content.date,
       };
       await axios.put(
-        "http://localhost:4000/api/notes/" + this.state._id,
+        "http://localhost:4000/api/notes/" + content._id,
         updatedNote
       );
     } else {
       const newNote = {
         title: content.title,
         content: content.content,
-        // author: content.userSelected,
-        author: 'fazt',
+        author: content.userSelected,
         date: content.date,
       };
       const res = await axios.post("http://localhost:4000/api/notes", newNote);
       console.log(res)
     }
-    // navigate("/");
+    navigate("/");
   };
 
   const onInputChange = ({ target: { name, value } }) =>
